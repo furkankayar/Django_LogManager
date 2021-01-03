@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import pymongo
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,6 +81,9 @@ TEMPLATES = [
                 'admin_tools.template_loaders.Loader',
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
+            ],
+            'builtins': [
+                'log_manager.templatetags.custom_tags'
             ]
         },
     },
@@ -91,6 +95,8 @@ WSGI_APPLICATION = 'webserver_logs.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+DATABASE_ROUTERS = ['webserver_logs.router.CheckerRouter']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -99,9 +105,19 @@ DATABASES = {
         'PASSWORD': '756ee75b',
         'HOST': 'database-1.czkgvjpdwtuh.us-east-1.rds.amazonaws.com',
         'PORT': '5432'
+    },
+    'log_manager_db': {
+        'ENGINE': 'djongo',
+        'NAME': 'log_manager',
+        #'HOST': 'mongodb://ec2-54-88-76-143.compute-1.amazonaws.com:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false'
+        'CLIENT': {
+            'host': 'ec2-54-88-76-143.compute-1.amazonaws.com',
+            'port': 27017
+        }
     }
 }
 
+MONGO_DB = pymongo.MongoClient('ec2-54-88-76-143.compute-1.amazonaws.com', 27017)['log_manager']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

@@ -35,6 +35,37 @@
     clear: both;
 }
 
+
+#navigation-menu{
+    background-color: #08202b !important;
+    border-bottom: none !important;
+}
+
+#navigation-menu li a{
+    color: white !important;
+    border: none !important;
+}
+
+#navigation-menu li.disabled a{
+    color: #666 !important;
+}
+
+#navigation-menu li:hover{
+    background-color: #0c3140 !important;
+}
+
+#navigation-menu li:hover a{
+    background-color: #0c3140 !important;
+}
+
+#navigation-menu li.selected{
+    background-color: #071c25 !important;
+}
+
+#navigation-menu li.selected a{
+    font-weight: 600;
+}
+
 div.breadcrumbs {
     display: block;
     padding: 10px 15px;
