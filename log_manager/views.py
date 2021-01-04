@@ -5,6 +5,40 @@ from .models import LogRecord
 from .models import log_records
 
 
+def log_stream(request):
+    if not request.is_ajax():
+        return response.HttpResponseBadRequest("Only Ajax requests are accepted.")
+
+    if request.method != 'POST':
+        return response.HttpResponseNotAllowed(request.method)
+
+    search_str = request.POST.get("search")
+    aggregates = []
+    if search_str != "":
+        aggregates.append({
+            "$match": {"$text": {"$search": search_str}}
+        })
+
+
+    last_requests = log_records.aggregate(aggregates + [
+        {
+            "$sort": {"time": -1}
+        },
+        {
+            "$limit": 100
+        },
+        {
+            "$project": {"_id": 0}
+        }
+    ])
+
+    data = {
+        "last_requests": list(last_requests)
+    }
+
+    return response.JsonResponse(data)
+
+
 def http_method_pie():
     http_method_count = log_records.aggregate([{
         "$group": {

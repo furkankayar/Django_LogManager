@@ -33,6 +33,7 @@ class CustomMenu(Menu):
                 models=('django.contrib.*',)
             ),
             items.MenuItem(_('Log Manager'), reverse('log_manager:index')),
+            
         ]
 
     def init_with_context(self, context):

@@ -111,13 +111,13 @@ DATABASES = {
         'NAME': 'log_manager',
         #'HOST': 'mongodb://ec2-54-88-76-143.compute-1.amazonaws.com:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false'
         'CLIENT': {
-            'host': 'ec2-54-88-76-143.compute-1.amazonaws.com',
+            'host': 'ec2-54-91-192-213.compute-1.amazonaws.com',
             'port': 27017
         }
     }
 }
 
-MONGO_DB = pymongo.MongoClient('ec2-54-88-76-143.compute-1.amazonaws.com', 27017)['log_manager']
+MONGO_DB = pymongo.MongoClient('ec2-54-91-192-213.compute-1.amazonaws.com', 27017)['log_manager']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
