@@ -100,7 +100,7 @@ DATABASE_ROUTERS = ['webserver_logs.router.CheckerRouter']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
+        'NAME': 'log_manager',
         'USER': 'postgres',
         'PASSWORD': '756ee75b',
         'HOST': 'database-1.czkgvjpdwtuh.us-east-1.rds.amazonaws.com',
@@ -137,7 +137,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTH_USER_MODEL = "log_manager.CustomUser"
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 

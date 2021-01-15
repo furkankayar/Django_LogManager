@@ -76,7 +76,76 @@
                 <canvas class="mt-1" id="resource_frequency"></canvas>
             </div>
     </div>
-    <div class="grid-stack-item" data-gs-min-width="6" data-gs-min-height="40" data-gs-max-height="80" data-custom-id="2"
+     <div class="grid-stack-item" data-gs-min-width="6" data-gs-min-height="53" data-custom-id="2"
+        data-gs-x="0" data-gs-y="100"
+        data-gs-width="6" data-gs-height="53">
+            <div class="grid-stack-item-content text-center">
+                <h6 class="header m-1">Total Requests According to Days</h6>
+                <hr class="m-0"/>
+                <div class="row m-1 text-left">
+                    <select class="m-1" id="request_month_year" name="date_year">
+                        <option value="2015">2015</option>
+                        <option selected value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                    </select>
+                    <select class="m-1 p-0" id="request_month_month" name="date_month">
+                        <option value="12">12</option>
+                        <option value="11">11</option>
+                        <option value="10">10</option>
+                        <option value="9">9</option>
+                        <option value="8">8</option>
+                        <option value="7">7</option>
+                        <option value="6">6</option>
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option selected value="1">1</option>
+                    </select>
+                    <button class="btn btn-primary m-1 p-1" id="request_month_button" style="max-height:30px;font-size:0.75rem;">Update</button>
+                </div>
+                <hr/>
+                <canvas class="mt-1" id="requests_month"></canvas>
+            </div>
+    </div>
+     <div class="grid-stack-item"
+        data-gs-x="6" data-gs-y="100" data-gs-min-height="53" data-gs-min-width="6" data-custom-id="3"
+        data-gs-width="6" data-gs-height="53">
+            <div class="grid-stack-item-content">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6 class="header m-1">Status Codes</h6>
+                        <hr class="m-0"/>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-5 text-center">
+                        <table class="w-100">
+                            <tr>
+                                <th>Code</th>
+                                <th>Count</th>
+                                <th>Percentage</th>
+                            </tr>
+                            {% for item in status_code_pie.table_items %}
+                            <tr>
+                                <td>{{ item.method }}</td>
+                                <td>{{ item.count }}</td>
+                                <td>{{ item.percentage }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="col-7">
+                        <canvas id="status_codes"></canvas>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="grid-stack-item" data-gs-min-width="6" data-gs-min-height="40" data-gs-max-height="80" data-custom-id="4"
         data-gs-x="6" data-gs-y="0"
         data-gs-width="6" data-gs-height="80">
             <div class="grid-stack-item-content text-center" style="overflow-x:scroll;">
@@ -106,11 +175,14 @@
                 <table>
             </div>
     </div>
+    
 </div>
 
 
 <script>
     $(function () {
+        
+        
         var options = {
             cellHeight: 1,
             verticalMargin: 10
@@ -130,7 +202,6 @@
         }
         
         $('.grid-stack').on('change', function (event, items) {
-       
             let storagePositions = {
             };
                  
@@ -175,6 +246,8 @@
                 });
             });
         });
+
+        
     });
 
     function httpMethodPie(){
@@ -203,6 +276,42 @@
                     "rgba(75, 192, 192, 0.2)",
                     "rgba(153, 102, 255, 0.2)",
                     "rgba(3, 236, 252, 0.2)"
+                ]
+            }]
+        }
+        });
+    }
+
+    function statusCodePie(){
+        let counts = {{ status_code_pie.counts|safe }}
+        let methods = {{ status_code_pie.ids|safe }}
+        let http_methods_canvas = $("#status_codes");
+        let http_methods_chart = new Chart(http_methods_canvas, {
+        type: 'pie',
+        data: {
+            labels: methods,
+            datasets: [{
+                label: 'Http Methods',
+                data: counts,
+                backgroundColor: [
+                    "rgba(255, 99, 132, 0.6)",
+                    "rgba(54, 162, 235, 0.6)",
+                    "rgba(255, 206, 86, 0.6)",
+                    "rgba(75, 192, 192, 0.6)",
+                    "rgba(153, 102, 255, 0.6)",
+                    "rgba(3, 236, 252, 0.6)",
+                    "rgba(0, 102, 0, 0.6)",
+                    "rgba(3, 236, 252, 0.6)",
+                ],
+                borderColor: [
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                    "rgba(3, 236, 252, 0.2)",
+                    "rgba(0, 102, 0, 0.2)",
+                    "rgba(3, 236, 252, 0.2)",
                 ]
             }]
         }
@@ -261,8 +370,116 @@
         });
     }
 
+    function requestsMonthBar(){
+        let request_counts = {{ requests_month_bar.counts|safe }}
+        let months = {{ requests_month_bar.ids|safe }}
+        let requests_month_canvas = $("#requests_month");
+        let requests_month_chart = new Chart(requests_month_canvas, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                data: request_counts,
+                label: "Total Requests According to Days",
+                backgroundColor: [
+                    "rgb(0, 102, 0, 0.6)",
+                    "rgb(51, 102, 255, 0.6)",
+                    "rgba(255, 99, 132, 0.6)",
+                    "rgba(54, 162, 235, 0.6)",
+                    "rgba(255, 206, 86, 0.6)",
+                    "rgba(75, 192, 192, 0.6)",
+                    "rgba(153, 102, 255, 0.6)",
+                    "rgba(3, 236, 252, 0.6)",
+                    "rgb(102, 0, 51, 0.6)",
+                    "rgb(255, 255, 102, 0.6)",
+                    "rgb(0, 102, 0, 0.6)",
+                    "rgb(51, 102, 255, 0.6)",
+                    "rgba(255, 99, 132, 0.6)",
+                    "rgba(54, 162, 235, 0.6)",
+                    "rgba(255, 206, 86, 0.6)",
+                    "rgba(75, 192, 192, 0.6)",
+                    "rgba(153, 102, 255, 0.6)",
+                    "rgba(3, 236, 252, 0.6)",
+                    "rgb(102, 0, 51, 0.6)",
+                    "rgb(255, 255, 102, 0.6)",
+                    "rgb(0, 102, 0, 0.6)",
+                    "rgb(51, 102, 255, 0.6)",
+                    "rgba(255, 99, 132, 0.6)",
+                    "rgba(54, 162, 235, 0.6)",
+                    "rgba(255, 206, 86, 0.6)",
+                    "rgba(75, 192, 192, 0.6)",
+                    "rgba(153, 102, 255, 0.6)",
+                    "rgba(3, 236, 252, 0.6)",
+                    "rgb(102, 0, 51, 0.6)",
+                    "rgb(255, 255, 102, 0.6)",
+                ],
+                borderColor: [
+                    "rgb(0, 102, 0, 0.2)",
+                    "rgb(51, 102, 255, 0.2) ",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                    "rgba(3, 236, 252, 0.2)",
+                    "rgb(102, 0, 51, 0.2)",
+                    "rgb(255, 255, 102, 0.2)",
+                    "rgb(0, 102, 0, 0.2)",
+                    "rgb(51, 102, 255, 0.2) ",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                    "rgba(3, 236, 252, 0.2)",
+                    "rgb(102, 0, 51, 0.2)",
+                    "rgb(255, 255, 102, 0.2)",
+                    "rgb(0, 102, 0, 0.2)",
+                    "rgb(51, 102, 255, 0.2) ",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                    "rgba(3, 236, 252, 0.2)",
+                    "rgb(102, 0, 51, 0.2)",
+                    "rgb(255, 255, 102, 0.2)",
+                ]
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return tooltipItem.yLabel + " requests";
+                    }
+                }
+            }
+        }
+        });
+        $("#request_month_button").click(function() {
+            $.post("/log_manager/request_month", {month: $("#request_month_month").val(), year: $("#request_month_year").val()}, function(data){
+                requests_month_chart.data.labels = [];
+                data.ids.forEach(item => {
+                    requests_month_chart.data.labels.push(item);
+                });
+
+                requests_month_chart.data.datasets[0].data = [];
+                data.counts.forEach(item => {
+                    requests_month_chart.data.datasets[0].data.push(item);
+                })
+                requests_month_chart.update();
+            });
+        });
+    }
+
     httpMethodPie();
+    statusCodePie();
     resourceFrequencyBar();
+    requestsMonthBar();
 
 </script>
 
