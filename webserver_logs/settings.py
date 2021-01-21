@@ -27,7 +27,7 @@ SECRET_KEY = 't5xk!uti(uvdir(mcz(d86^*=*az-%-yy2y1$@m8zi$z^054um'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ec2-54-91-192-213.compute-1.amazonaws.com"]
+ALLOWED_HOSTS = ["ec2-54-91-192-213.compute-1.amazonaws.com", "localhost"]
 
 
 # Application definition
@@ -102,22 +102,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'log_manager',
         'USER': 'postgres',
-        'PASSWORD': '756ee75b',
+        'PASSWORD': os.environ.get("POSTGRESQL_PASSWORD"),
         'HOST': 'database-1.czkgvjpdwtuh.us-east-1.rds.amazonaws.com',
         'PORT': '5432'
     },
-    'log_manager_db': {
-        'ENGINE': 'djongo',
-        'NAME': 'log_manager',
-        #'HOST': 'mongodb://ec2-54-88-76-143.compute-1.amazonaws.com:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false'
-        'CLIENT': {
-            'host': 'ec2-54-91-192-213.compute-1.amazonaws.com',
-            'port': 27017
-        }
-    }
 }
 
-MONGO_DB = pymongo.MongoClient('ec2-54-91-192-213.compute-1.amazonaws.com', 27017)['log_manager']
+MONGO_DB = pymongo.MongoClient('mongodb://furkankayar:' + (os.environ.get("MONGODB_PASSWORD") if os.environ.get("MONGODB_PASSWORD") is not None else 'nopass') + '@ec2-54-91-192-213.compute-1.amazonaws.com:27017')['log_manager']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
