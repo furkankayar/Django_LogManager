@@ -27,7 +27,7 @@ SECRET_KEY = 't5xk!uti(uvdir(mcz(d86^*=*az-%-yy2y1$@m8zi$z^054um'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["ec2-54-91-192-213.compute-1.amazonaws.com"]
 
 
 # Application definition
