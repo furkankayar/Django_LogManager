@@ -95,7 +95,6 @@ WSGI_APPLICATION = 'webserver_logs.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASE_ROUTERS = ['webserver_logs.router.CheckerRouter']
 
 DATABASES = {
     'default': {

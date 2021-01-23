@@ -1,7 +1,5 @@
-from django.db.models.aggregates import Count
 from django.http import response
 from django.shortcuts import render
-from .models import LogRecord
 from .models import log_records
 
 
