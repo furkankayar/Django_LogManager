@@ -196,6 +196,9 @@ def requested_resource_bar():
 
 def index(request):
     
+    if not request.user.is_authenticated:
+        return response.HttpResponseRedirect("/admin/login/?next=/log_manager/")
+
     if not request.user.can_access_log_manager and not request.user.is_superuser:
         return response.HttpResponseForbidden("You are not allowed to access this page.")
 
